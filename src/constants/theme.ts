@@ -1,65 +1,53 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
+// src/constants/theme.ts
 
-import '@/global.css';
+type ThemeMode = "light" | "dark";
 
-import { Platform } from 'react-native';
+export const lightTheme = {
+  mode: "light" as ThemeMode,
 
-export const Colors = {
-  light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
-  },
-  dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
-  },
-} as const;
+  background: "#F8FAFC",
+  surface: "#FFFFFF",
+  text: "#0F172A",
+  subtext: "#64748B",
+  border: "#E2E8F0",
 
-export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
+  error: "#EF4444",
+  success: "#16A34A",   // ✅ confirmed
 
-export const Fonts = Platform.select({
-  ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
-  },
-  default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
-  },
-  web: {
-    sans: 'var(--font-display)',
-    serif: 'var(--font-serif)',
-    rounded: 'var(--font-rounded)',
-    mono: 'var(--font-mono)',
-  },
-});
+  primary: "#6366F1",
+  accent: "#2DD4BF",
 
-export const Spacing = {
-  half: 2,
-  one: 4,
-  two: 8,
-  three: 16,
-  four: 24,
-  five: 32,
-  six: 64,
-} as const;
+  headerBg: "#152A4E",
+  headerTextPrimary: "#FFFFFF",
+  headerTextSecondary: "#7FB2FF",
 
-export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
-export const MaxContentWidth = 800;
+  tabBarBg: "#FFFFFF",
+  tabActive: "#0A84FF",
+  tabInactive: "#8E8E93",
+};
+
+export const darkTheme = {
+  mode: "dark" as ThemeMode,
+
+  background: "#0F172A",
+  surface: "#1E293B",
+  text: "#F8FAFC",
+  subtext: "#94A3B8",
+  border: "#334155",
+
+  error: "#FF453A",
+  success: "#16A34A",   // same success color kept consistent across themes
+
+  primary: "#6366F1",
+  accent: "#2DD4BF",
+
+  headerBg: "#0A1830",
+  headerTextPrimary: "#FFFFFF",
+  headerTextSecondary: "#7FB2FF",
+
+  tabBarBg: "#0F172A",
+  tabActive: "#2DD4BF",
+  tabInactive: "#94A3B8",
+};
+
+export type Theme = typeof lightTheme;

@@ -1,98 +1,115 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useEffect, useRef, useState } from "react";
+import { View, StyleSheet, Animated } from "react-native";
+import { router } from "expo-router";
+import { useFonts, Pacifico_400Regular } from "@expo-google-fonts/pacifico";
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+const SPLASH_DURATION = 3000; // reset from 10000 -> 3 seconds
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
+const TITLE_WORDS = ["Unit", "Nest"];
+
+export default function Index() {
+  const [fontsLoaded, fontError] = useFonts({ Pacifico_400Regular });
+
+  const mainLogoTranslateX = useRef(new Animated.Value(-150)).current;
+  const mainLogoOpacity = useRef(new Animated.Value(0)).current;
+  const subLogoTranslateX = useRef(new Animated.Value(150)).current;
+  const subLogoOpacity = useRef(new Animated.Value(0)).current;
+
+  const wordAnims = useRef(
+    TITLE_WORDS.map(() => ({
+      opacity: new Animated.Value(0),
+      translateY: new Animated.Value(10),
+    }))
+  ).current;
+
+  useEffect(() => {
+    // ✅ only wait for font if it's actually still loading AND hasn't errored
+    if (!fontsLoaded && !fontError) return;
+
+    const wordAnimations = wordAnims.map((anim) =>
+      Animated.parallel([
+        Animated.timing(anim.opacity, { toValue: 1, duration: 250, useNativeDriver: true }),
+        Animated.timing(anim.translateY, { toValue: 0, duration: 250, useNativeDriver: true }),
+      ])
     );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+
+    Animated.sequence([
+      Animated.parallel([
+        Animated.timing(mainLogoTranslateX, { toValue: 0, duration: 500, useNativeDriver: true }),
+        Animated.timing(mainLogoOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
+        Animated.timing(subLogoTranslateX, { toValue: 0, duration: 500, useNativeDriver: true }),
+        Animated.timing(subLogoOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
+      ]),
+      Animated.stagger(150, wordAnimations),
+    ]).start();
+
+    const timer = setTimeout(() => {
+      router.replace("/(tabs)/home");
+    }, SPLASH_DURATION);
+
+    return () => clearTimeout(timer);
+  }, [fontsLoaded, fontError]);
+
+  // ✅ proceed even if the font failed — just fall back to the system font
+  if (!fontsLoaded && !fontError) return null;
+
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+    <View style={styles.splashContainer}>
+      <Animated.Image
+        source={require("../../assets/app_images/app_logo.jpg")}
+        style={[
+          styles.appLogo,
+          { opacity: mainLogoOpacity, transform: [{ translateX: mainLogoTranslateX }] },
+        ]}
+        resizeMode="contain"
+      />
 
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+      <Animated.Image
+        source={require("../../assets/app_images/sub logo.jpg")}
+        style={[
+          styles.subLogo,
+          { opacity: subLogoOpacity, transform: [{ translateX: subLogoTranslateX }] },
+        ]}
+        resizeMode="contain"
+      />
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+      <View style={styles.titleRow}>
+        {TITLE_WORDS.map((word, index) => (
+          <Animated.Text
+            key={word + index}
+            style={[
+              styles.title,
+              { color: index === 0 ? "#152A4E" : "#2E7CF6" },
+              // ✅ fall back to a normal font if Pacifico failed to load
+              fontError ? { fontFamily: undefined } : null,
+              {
+                opacity: wordAnims[index].opacity,
+                transform: [{ translateY: wordAnims[index].translateY }],
+              },
+            ]}
+          >
+            {word}
+          </Animated.Text>
+        ))}
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  splashContainer: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#FFFFFF",
   },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
+  appLogo: { width: 200, height: 200, marginBottom: 16 },
+  subLogo: { width: 130, height: 130, marginBottom: 24 },
+  titleRow: { flexDirection: "row" },
   title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+    fontSize: 38,
+    fontWeight: "800",
+    letterSpacing: 0.5,
+    fontFamily: "Pacifico_400Regular",
   },
 });

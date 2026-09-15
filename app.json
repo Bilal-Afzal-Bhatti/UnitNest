@@ -4,7 +4,7 @@
     "slug": "UnitNest",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/app_images/app_logo.jpg",
     "scheme": "unitnest",
     "userInterfaceStyle": "automatic",
     "ios": {
@@ -14,7 +14,7 @@
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
+        "backgroundImage": "./assets/app_images/app_logo.jpg",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false
@@ -29,10 +29,11 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/app_images/app_logo.jpg",
           "imageWidth": 76
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,
