@@ -1,4 +1,4 @@
-// src/utils/storage.ts
+// src/utils/storage.ts — FUNCTIONS ONLY
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppSettings, ConversionRecord, DEFAULT_SETTINGS } from "@/types/storage";
 
@@ -34,6 +34,10 @@ export async function getHistory(): Promise<ConversionRecord[]> {
   }
 }
 
+function generateId(): string {
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+}
+
 export async function addHistoryEntry(entry: Omit<ConversionRecord, "id" | "createdAt">) {
   const history = await getHistory();
 
@@ -43,7 +47,6 @@ export async function addHistoryEntry(entry: Omit<ConversionRecord, "id" | "crea
     createdAt: new Date().toISOString(),
   };
 
-  // newest first, cap at 100 entries to avoid unbounded growth
   const updated = [newEntry, ...history].slice(0, 100);
   await AsyncStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
   return newEntry;
@@ -51,9 +54,4 @@ export async function addHistoryEntry(entry: Omit<ConversionRecord, "id" | "crea
 
 export async function clearHistory() {
   await AsyncStorage.removeItem(HISTORY_KEY);
-}
-
-// Simple UUID-like generator — no external uuid package needed
-function generateId(): string {
-  return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }

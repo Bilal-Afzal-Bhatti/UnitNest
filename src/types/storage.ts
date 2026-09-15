@@ -1,4 +1,4 @@
-// src/types/storage.ts
+// src/types/storage.ts — TYPES ONLY, nothing else
 export type ThemeMode = "light" | "dark" | "system";
 
 export type AppSettings = {
@@ -9,7 +9,7 @@ export type AppSettings = {
 
 export type ConversionRecord = {
   id: string;
-  category: string;
+  category: string
   inputValue: number;
   fromUnit: string;
   outputValue: number;
