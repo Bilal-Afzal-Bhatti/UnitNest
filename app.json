@@ -12,10 +12,9 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/app_images/app_logo.jpg",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundColor": "#6366F1",
+        "backgroundImage": "./assets/app_images/app_logo.jpg"
+       
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.uninest.UnitNest"
@@ -43,8 +42,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "2451839e-1a24-4afe-ae51-aaa31492f94a"
+        "projectId": "0f1badac-4016-4828-a086-73f6972a3853"
       }
-    }
+    },
+    "owner": "bilalbhatti"
   }
 }
