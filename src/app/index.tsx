@@ -26,13 +26,7 @@ export default function Index() {
     // ✅ only wait for font if it's actually still loading AND hasn't errored
     if (!fontsLoaded && !fontError) return;
 
-    const wordAnimations = wordAnims.map((anim) =>
-      Animated.parallel([
-        Animated.timing(anim.opacity, { toValue: 1, duration: 250, useNativeDriver: true }),
-        Animated.timing(anim.translateY, { toValue: 0, duration: 250, useNativeDriver: true }),
-      ])
-    );
-
+ 
     Animated.sequence([
       Animated.parallel([
         Animated.timing(mainLogoTranslateX, { toValue: 0, duration: 500, useNativeDriver: true }),
@@ -40,7 +34,7 @@ export default function Index() {
         Animated.timing(subLogoTranslateX, { toValue: 0, duration: 500, useNativeDriver: true }),
         Animated.timing(subLogoOpacity, { toValue: 1, duration: 500, useNativeDriver: true }),
       ]),
-      Animated.stagger(150, wordAnimations),
+     
     ]).start();
 
     const timer = setTimeout(() => {
@@ -73,25 +67,7 @@ export default function Index() {
         resizeMode="contain"
       />
 
-      <View style={styles.titleRow}>
-        {TITLE_WORDS.map((word, index) => (
-          <Animated.Text
-            key={word + index}
-            style={[
-              styles.title,
-              { color: index === 0 ? "#152A4E" : "#2E7CF6" },
-              // ✅ fall back to a normal font if Pacifico failed to load
-              fontError ? { fontFamily: undefined } : null,
-              {
-                opacity: wordAnims[index].opacity,
-                transform: [{ translateY: wordAnims[index].translateY }],
-              },
-            ]}
-          >
-            {word}
-          </Animated.Text>
-        ))}
-      </View>
+      
     </View>
   );
 }

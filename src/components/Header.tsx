@@ -1,6 +1,6 @@
 // src/components/Header.tsx
 import React from "react";
-import { View, Text, Pressable, StyleSheet, Platform, useWindowDimensions } from "react-native";
+import { View, Pressable, StyleSheet, Platform, useWindowDimensions, Image } from "react-native"; // Import Image
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -14,7 +14,6 @@ export default function Header({ showBack = false }: HeaderProps) {
   const { width } = useWindowDimensions();
 
   const isTablet = width >= 768;
-
   return (
     <View
       style={[
@@ -41,12 +40,15 @@ export default function Header({ showBack = false }: HeaderProps) {
 
         {/* Center section: "Unit" + "Nest" — same two-tone colors as splash screen */}
         <View style={styles.centerContainer}>
-          <Text style={[styles.title, { color: "#FFFFFF", fontSize: isTablet ? 26 : 20 }]}>
-            Unit
-          </Text>
-          <Text style={[styles.title, { color: "#7FB2FF", fontSize: isTablet ? 26 : 20 }]}>
-            Nest
-          </Text>
+          <Image
+            source={require("@/assets/app_images/sub logo.jpg")}
+            style={[
+          styles.subLogo
+        
+        ]}
+            resizeMode="contain"
+          />
+         
         </View>
 
         {/* Right spacer to balance left width */}
@@ -97,4 +99,5 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     letterSpacing: 0.3,
   },
+  subLogo: { width: 100, height: 100, marginBottom: 10 },
 });
