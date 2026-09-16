@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@/context/ThemeContext";
 import ConfirmModal from "@/components/ConfirmModal";
 import { getSettings, saveSettings, clearHistory } from "@/utils/storage";
+import { useRouter } from "expo-router";
 
 export default function Settings() {
   const { theme, setThemeMode } = useTheme();
@@ -16,7 +17,7 @@ export default function Settings() {
   useEffect(() => {
     getSettings().then((s) => setPrecision(s.decimalPlaces));
   }, []);
-
+const router =useRouter();
   const updatePrecision = (value: number) => {
     setPrecision(value);
     saveSettings({ decimalPlaces: value });
@@ -54,7 +55,9 @@ export default function Settings() {
       // silently ignore share cancellation
     }
   };
-
+const gotopolicy = (p0: string) =>{
+router.push("/PrivacyPolicy")
+}
   const handleOpenLink = (url: string) => {
     Linking.openURL(url).catch(() => {
       Alert.alert("Error", "Could not open the link.");
@@ -127,17 +130,11 @@ export default function Settings() {
         <ActionRow
           icon="document-text-outline"
           label="Privacy Policy"
-          onPress={() => handleOpenLink("https://example.com/privacy")}
+          onPress={() => gotopolicy("p")}
           textColor={theme.text}
           borderColor={theme.border}
         />
-        <ActionRow
-          icon="document-outline"
-          label="Terms / Disclaimer"
-          onPress={() => handleOpenLink("https://example.com/terms")}
-          textColor={theme.text}
-          borderColor={theme.border}
-        />
+        
         <ActionRow
           icon="star-outline"
           label="Rate App"
